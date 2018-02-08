@@ -13,16 +13,36 @@ app.use(bodyParser.urlencoded({extended:false}));
 
 app.locals.pretty = true;
 
-// var mysql = require('mysql');
-// var conn = mysql.createConnection({
-//     host :'localhost',
-//     user :'root',
-//     password:'7733',
-//     database:'testdb'
-// });
+//port setting
+app.set('port', process.env.PORT || 8080);
 
-// con.connect();
+//mariadb setting
 
+var mysql = require('mysql');
+
+
+var conn = mysql.createConnection({
+    host :'localhost',
+    user :'root',
+    password:'7733',
+    database:'testdb'
+});
+
+conn.connect(function(err){
+    if(err){
+        console.log('mariadb connection error'+err);
+    }
+    else{
+        console.log('mariadb connected');
+    }
+});
+
+conn.query('SELECT * from user', function(err, rows, fields) {
+    if (!err)
+      console.log('The solution is: ', rows);
+    else
+      console.log('Error while performing Query.', err);
+  });
 
 //app.get//////////////////////////////////////////////////////
 
@@ -69,6 +89,6 @@ app.get('/menu/:id',function(req,res){
 });
 
 //app.listen port setting
-app.listen(3000,function(){
-    console.log('start server 3000 port');
-});
+app.listen(app.get('port'),function(){
+    console.log('starting server '+app.get('port')+' port');
+}); 
