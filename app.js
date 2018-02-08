@@ -23,6 +23,14 @@ app.locals.pretty = true;
 
 // con.connect();
 
+
+//app.get//////////////////////////////////////////////////////
+
+
+app.get ('/',function(req,res){
+    console.log('test root');
+    res.render('home.ejs');
+})
 app.get('/menu',function(req,res){
     
         console.log('success!!!');
@@ -31,7 +39,7 @@ app.get('/menu',function(req,res){
         res.render('menu.ejs');
     
 });
-
+//app.post//////////////////////////////////////////////
 app.post('/body',function(req,res){
     console.log('body print');
     var title = req.body.title;
@@ -59,6 +67,8 @@ app.get('/menu/:id',function(req,res){
         }
     });
 });
+
+//app.listen port setting
 app.listen(3000,function(){
     console.log('start server 3000 port');
 });
