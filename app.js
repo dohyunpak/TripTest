@@ -17,48 +17,61 @@ app.locals.pretty = true;
 app.set('port', process.env.PORT || 8080);
 
 //mariadb setting
-
 var mysql = require('mysql');
-
 
 var conn = mysql.createConnection({
     host :'localhost',
     user :'root',
-    password:'7733',
+    password:'7733',  
     database:'testdb'
 });
 
-conn.connect(function(err){
-    if(err){
-        console.log('mariadb connection error'+err);
-    }
-    else{
-        console.log('mariadb connected');
-    }
+//query statement
+var stmt_output ='select * from user';  
+//db_out_array
+var query_output ;
+
+//db_out_array
+conn.query(stmt_output,function(err,rows,fields){
+    if(!err){
+        console.log('db output');
+        query_output = rows;
+        console.log(query_output);
+    }else{
+        console.log('db output error',err);
+    };
+
 });
 
-conn.query('SELECT * from user', function(err, rows, fields) {
-    if (!err)
-      console.log('The solution is: ', rows);
-    else
-      console.log('Error while performing Query.', err);
-  });
+//db_input_statement
+app.get('/output',function(req,res){
+    res.render('output',{query_output:query_output});
+});
 
+
+//query_input statement
+var stmt_input ='select * from user';  
+//db_out_array
+var query_input ;
+
+//db_out_array
+conn.query(stmt_input,function(err,rows,fields){
+    if(!err){
+        console.log('db input');
+        query_input = rows;
+        //console.log는 로그파일에 기록하는 것으로 대체
+        console.log(query_input);
+    }else{
+        console.log('db input error',err);
+    };
+
+});
+
+app.post('/input',function(req,res){
+    res.render('input',{query_input:query_input});
+});
 //app.get//////////////////////////////////////////////////////
 
-
-app.get ('/',function(req,res){
-    console.log('test root');
-    res.render('home.ejs');
-})
-app.get('/menu',function(req,res){
-    
-        console.log('success!!!');
-
-        //res.send('success!');
-        res.render('menu.ejs');
-    
-});
 //app.post//////////////////////////////////////////////
 app.post('/body',function(req,res){
     console.log('body print');
@@ -87,7 +100,6 @@ app.get('/menu/:id',function(req,res){
         }
     });
 });
-
 //app.listen port setting
 app.listen(app.get('port'),function(){
     console.log('starting server '+app.get('port')+' port');
